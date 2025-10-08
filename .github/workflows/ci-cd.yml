@@ -1,0 +1,13 @@
+#--- DEBUT --- Déclenchement du pipeline
+name: CI/CD - LAMP Project
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-test:
+    name: Build and Test Containers
+    runs-on: ubuntu-latest
