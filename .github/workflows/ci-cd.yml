@@ -13,23 +13,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Récupération du code source
-      uses: actions/checkout@v4
+      - name: Récupération du code source
+        uses: actions/checkout@v4
 
-    - name: Environnement Docker
-      run: docker-compose up -d --build
+      - name: Environnement Docker
+        run: docker-compose up -d --build
 
-    - name: Test PHP
-      run: |
-        echo "Test du conteneur PHP"
-        docker exec $(docker ps -qf "name=php") php -v
+      - name: Test PHP
+        run: |
+          echo "Test du conteneur PHP"
+          docker exec $(docker ps -qf "name=php") php -v
 
-    - name: Test Nginx
-      run: |
-        docker exec $(docker ps -qf "name=nginx") nginx -t
+      - name: Test Nginx
+        run: |
+          docker exec $(docker ps -qf "name=nginx") nginx -t
 
-    - name: Arrêt des conteneurs
-      run: docker-compose down
+      - name: Arrêt des conteneurs
+        run: docker-compose down
 
 deploy:
   name: Deploy to Pre-Prod VPS
