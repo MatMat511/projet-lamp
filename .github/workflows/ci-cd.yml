@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Environnement Docker
-        run: docker-compose up -d --build
+        run: docker compose up -d --build
 
       - name: Test PHP
         run: |
