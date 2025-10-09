@@ -30,9 +30,6 @@ jobs:
 
     - name: Arrêt des conteneurs
       run: docker-compose down
-<<<<<<< HEAD
-=======
-
 
 # --- SUITE --- Opération de déploiement sur le serveur
 deploy:
