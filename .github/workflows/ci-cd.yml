@@ -12,53 +12,52 @@ jobs:
     name: Build and Test Containers
     runs-on: ubuntu-latest
 
-  steps:
-    - name: Récupération du code source
-      uses: actions/checkout@v4
+    steps:
+      - name: Récupération du code source
+        uses: actions/checkout@v4
 
-    - name: Environnement Docker
-      run: docker-compose up -d --build
+      - name: Environnement Docker
+        run: docker-compose up -d --build
 
-    - name: Test PHP
-      run: |
-        echo "Test du conteneur PHP"
-        docker exec $(docker ps -qf "name=php") php -v
+      - name: Test PHP
+        run: |
+          echo "Test du conteneur PHP"
+          docker exec $(docker ps -qf "name=php") php -v
 
-    - name: Test Nginx
-      run: |
-        docker exec $(docker ps -qf "name=nginx") nginx -t
+      - name: Test Nginx
+        run: |
+          docker exec $(docker ps -qf "name=nginx") nginx -t
 
-    - name: Arrêt des conteneurs
-      run: docker-compose down
+      - name: Arrêt des conteneurs
+        run: docker-compose down
 
-# --- SUITE --- Opération de déploiement sur le serveur
-deploy:
-  name: Deploy to Pre-Prod VPS
-  runs-on: ubuntu-latest
-  needs: build-test
-  if: github.ref == 'refs/heads/main'
+  deploy:
+    name: Deploy to Pre-Prod VPS
+    runs-on: ubuntu-latest
+    needs: build-test
+    if: github.ref == 'refs/heads/main'
 
-  steps:
-    - name: Récupération du code
-      uses: actions/checkout@v4
+    steps:
+      - name: Récupération du code
+        uses: actions/checkout@v4
 
-    - name: Deploiement via SSH sur le VPS
-      uses: appleboy/ssh-action@v1.0.3 #1.2.2
-      with:
-        host: ${{ secrets.MAT_HOST }}
-        username: ${{ secrets.MAT_USERNAME }}
-        key: ${{ secrets.MAT_SSH }}
-        port: ${{ secrets.MAT_PORT }}
-        script: |
-          set -e
-          cd ~/lamp-nginx-preprod
+      - name: Deploiement via SSH sur le VPS
+        uses: appleboy/ssh-action@v1.0.3 #1.2.2
+        with:
+          host: ${{ secrets.MAT_HOST }}
+          username: ${{ secrets.MAT_USERNAME }}
+          key: ${{ secrets.MAT_SSH }}
+          port: ${{ secrets.MAT_PORT }}
+          script: |
+            set -e
+            cd ~/lamp-nginx-preprod
 
-          rm -rf lamp-nginx-project
-          mkdir lamp-nginx-project
-          cd lamp-nginx-project
+            rm -rf lamp-nginx-project
+            mkdir lamp-nginx-project
+            cd lamp-nginx-project
 
-          git clone https://github.com/${{ github.repository }} .
-          git checkout main
+            git clone https://github.com/${{ github.repository }} .
+            git checkout main
 
-          docker-compose down || true
-          docker-compose up -d --build
+            docker-compose down || true
+            docker-compose up -d --build
