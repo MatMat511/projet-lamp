@@ -1,0 +1,27 @@
+name: PHP Tests
+on:
+push:
+branches: [main]
+pull_request:
+branches: [main]
+jobs:
+php-tests:
+runs-on: ubuntu-latest
+strategy:
+matrix:
+php-version: [8.2, 8.1]
+steps:
+- name: Checkout repository
+uses: actions/checkout@v3
+- name: Setup PHP
+uses: shivammathur/setup-php@v3
+with:
+php-version: ${{ matrix.php-version }}
+coverage: xdebug
+- name: Validate PHP syntax
+run: |
+find . -name "*.php" -not -path "./vendor/*" -print0 | xargs -0 -n1 php -l
+- name: Install Composer dependencies
+run: composer install --prefer-dist --no-progress --no-interaction
+- name: Run PHPUnit tests
+run: vendor/bin/phpunit --colors=always –verbose
