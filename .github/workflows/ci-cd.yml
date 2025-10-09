@@ -12,7 +12,7 @@ jobs:
     name: Build and Test Containers
     runs-on: ubuntu-latest
 
-  steps:
+    steps:
     - name: Récupération du code source
       uses: actions/checkout@v4
 
