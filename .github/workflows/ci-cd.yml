@@ -31,7 +31,6 @@ jobs:
     - name: Arrêt des conteneurs
       run: docker-compose down
 
-# --- SUITE --- Opération de déploiement sur le serveur
 deploy:
   name: Deploy to Pre-Prod VPS
   runs-on: ubuntu-latest
